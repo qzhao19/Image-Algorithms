@@ -1,3 +1,5 @@
+import numpy as np
+
 def BGR2GRAY(image):
     """Transform a bgr image to a gray image. Grayscale is a kind of image luminance 
     expression method and is calculated by the following formula: 
