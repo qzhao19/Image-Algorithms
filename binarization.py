@@ -12,3 +12,4 @@ def binarization(image, threshold):
     image[image > threshold] = 255
     
     return image
+
