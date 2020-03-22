@@ -110,20 +110,20 @@ def HSV2BGR(img_in, hsv):
 	return out
 
     
-if __name__ == "__main__":
-    im = cv2.imread('./image/lenna.png')
+# if __name__ == "__main__":
+#     im = cv2.imread('./image/lenna.png')
     
-    out1 = BGR2HSV(im)
-    # out2 = BGR2HSV2(im)
-    # print(out)
+#     out1 = BGR2HSV(im)
+#     # out2 = BGR2HSV2(im)
+#     # print(out)
     
-    fig = plt.figure()
-    # plt.subplot(121)
-    plt.imshow(out1)
-    plt.title('out1') 
-    # plt.subplot(122)
-    # plt.imshow(out2)
-    # plt.title('out2') 
-    plt.show()
+#     fig = plt.figure()
+#     # plt.subplot(121)
+#     plt.imshow(out1)
+#     plt.title('out1') 
+#     # plt.subplot(122)
+#     # plt.imshow(out2)
+#     # plt.title('out2') 
+#     plt.show()
     
     
