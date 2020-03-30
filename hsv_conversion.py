@@ -81,33 +81,33 @@ def HSV2BGR(img_in, hsv):
     img = img_in.copy() / 255.
 
 	# get max and min
-	max_v = np.max(img, axis=2).copy()
-	min_v = np.min(img, axis=2).copy()
+    max_v = np.max(img, axis=2).copy()
+    min_v = np.min(img, axis=2).copy()
+    out = np.zeros_like(img)
 
-	out = np.zeros_like(img)
+    H = hsv[..., 0]
+    S = hsv[..., 1]
+    V = hsv[..., 2]
 
-	H = hsv[..., 0]
-	S = hsv[..., 1]
-	V = hsv[..., 2]
+    C = S
+    H_ = H / 60.
+    X = C * (1 - np.abs( H_ % 2 - 1))
+    Z = np.zeros_like(H)
+    vals = [[Z,X,C], [Z,C,X], [X,C,Z], [C,X,Z], [C,Z,X], [X,Z,C]]
 
-	C = S
-	H_ = H / 60.
-	X = C * (1 - np.abs( H_ % 2 - 1))
-	Z = np.zeros_like(H)
+	
+    for i in range(6):
+        ind = np.where((i <= H_) & (H_ < (i+1)))
+        out[..., 0][ind] = (V - C)[ind] + vals[i][0][ind]
+        out[..., 1][ind] = (V - C)[ind] + vals[i][1][ind]
+        out[..., 2][ind] = (V - C)[ind] + vals[i][2][ind]
 
-	vals = [[Z,X,C], [Z,C,X], [X,C,Z], [C,X,Z], [C,Z,X], [X,Z,C]]
+	
+    out[np.where(max_v == min_v)] = 0
+    out = np.clip(out, 0, 1)
+    out = (out * 255).astype(np.uint8)
 
-	for i in range(6):
-		ind = np.where((i <= H_) & (H_ < (i+1)))
-		out[..., 0][ind] = (V - C)[ind] + vals[i][0][ind]
-		out[..., 1][ind] = (V - C)[ind] + vals[i][1][ind]
-		out[..., 2][ind] = (V - C)[ind] + vals[i][2][ind]
-
-	out[np.where(max_v == min_v)] = 0
-	out = np.clip(out, 0, 1)
-	out = (out * 255).astype(np.uint8)
-
-	return out
+    return out
 
     
 # if __name__ == "__main__":
