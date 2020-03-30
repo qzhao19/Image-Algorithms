@@ -14,13 +14,13 @@ import matplotlib.pyplot as plt
 
 
 # BGR -> HSV
-def BGR2HSV(image_in):
+def BGR2HSV(img_in):
     """Convert bgr image to hsv image
     
 
     Parameters
     ----------
-        image_in : int8 of shape [h, w, c]
+        img_in : int8 of shape [h, w, c]
             DESCRIPTION.
 
     Returns
@@ -28,10 +28,10 @@ def BGR2HSV(image_in):
         None.
 
     """
-    if not isinstance(image_in, np.float32):
-        image_in = image_in.astype(np.float32)
+    if not isinstance(img_in, np.float32):
+        img_in = img_in.astype(np.float32)
     
-    rgb = image_in.copy() / 255.
+    rgb = img_in.copy() / 255.
     
     hsv = np.zeros_like(rgb, dtype=np.float32)
     
@@ -70,7 +70,7 @@ def HSV2BGR(img_in, hsv):
 
     Parameters
     ----------
-    image_in : TYPE
+    img_in : TYPE
         DESCRIPTION.
 
     Returns
