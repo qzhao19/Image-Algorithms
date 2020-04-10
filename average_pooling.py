@@ -42,7 +42,9 @@ def average_pooling(img_path, pool_size=8):
     for x in range(N_h):
         for y in range(N_w):
             for c in range(img_c):
-                img_out[pool_size * x : pool_size * (x + 1), pool_size * y : pool_size * (y + 1), c] = np.mean(img_out[pool_size * x : pool_size * (x + 1), pool_size * y : pool_size * (y + 1), c]).astype(np.int8)
+                img_out[pool_size * x : pool_size * (x + 1), \
+                        pool_size * y : pool_size * (y + 1), c] = np.mean(img_out[pool_size * x : pool_size * (x + 1), \
+                                                                                  pool_size * y : pool_size * (y + 1), c]).astype(np.int8)
                     
     return img_out
 
