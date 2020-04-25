@@ -48,7 +48,19 @@ def _median_filter(img_in, ksize):
     
     img_out[pad : pad + img_h, pad : pad + img_w, :] = img_in.copy().astype(np.float32)
     
+     # temp image 
+    tmp = img_out.copy()
     
+    for y in range(img_h):
+        for x in range(img_w):
+            for z in range(img_c):
+                img_out[y + pad, x + pad, z] = np.median(tmp[y : y + ksize, x : x + ksize, z])
+
+    img_out = np.clip(img_out, 0, 255)
+    
+    img_out = img_out.astype(np.uint8) 
+    
+    return img_out
 
 
 
