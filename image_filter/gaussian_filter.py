@@ -9,18 +9,19 @@ Created on Mon Apr  6 23:04:43 2020
 import cv2
 import numbers
 import numpy as np
+from utils.utils import display_image
 
 def _gaussian_fn(x, y, sigma):
     """compute 2D gaussian function
     
     Parameters
     ----------
-    x : TYPE
-        DESCRIPTION.
-    y : TYPE
-        DESCRIPTION.
-    sigma : TYPE
-        DESCRIPTION. The default is 1.5.
+        x : TYPE
+            DESCRIPTION.
+        y : TYPE
+            DESCRIPTION.
+        sigma : TYPE
+            DESCRIPTION. The default is 1.5.
 
     Returns
     -------
@@ -38,22 +39,20 @@ def _gaussian_fn(x, y, sigma):
 
 
 def _gaussian_kernel(ksize, sigma):
-    """compute 2D gaussian kernel
+    """
     
+
     Parameters
     ----------
-        x : int
+        ksize : TYPE
             DESCRIPTION.
-        y : int
+        sigma : TYPE
             DESCRIPTION.
-        ksize : int
-            kernel size.
-        sigma : float
-            standard deviation.
 
     Returns
     -------
-        ndarray of shape [ksize, ksize].
+    kernel : TYPE
+        DESCRIPTION.
 
     """
     
@@ -106,7 +105,7 @@ def _gaussian_filter(img_in, ksize, sigma):
     
     
     # prepare kernel
-    kernel = _gaussian_kernel(ksize)
+    kernel = _gaussian_kernel(ksize, sigma)
     
     for y in range(img_h):
         for x in range(img_w):
@@ -115,7 +114,7 @@ def _gaussian_filter(img_in, ksize, sigma):
     
     img_out = np.clip(img_out, 0, 255)
     
-    img_out = img_out.astype(np.uint8) 
+    img_out = img_out[pad : pad + img_h, pad : pad + img_w].astype(np.uint8)
     
     return img_out
     
@@ -169,7 +168,9 @@ def gaussian_filter(img_path, ksize = 3, sigma = 1.5):
     return result   
     
     
-    
+if __name__ == '__main__':
+    res = gaussian_filter('./image/lenna.png')
+    display_image(res)   
     
     
     
