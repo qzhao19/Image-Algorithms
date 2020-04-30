@@ -13,9 +13,8 @@ from utils.utils import display_image
 
 
 def _median_filter(img_in, ksize):
-    """
+    """mdedian filter
     
-
     Parameters
     ----------
         img : ndarray of shape [height, width, channel]
@@ -29,13 +28,6 @@ def _median_filter(img_in, ksize):
 
     """
 
-
-    if len(img_in.shape) == 3:
-        img_h, img_w, img_c = img_in.shape
-        
-    else:
-        img_in = np.expand_dims(img_in, axis=-1)
-        img_h, img_w, img_c = img_in.shape
 
     # get height, width, and channel if image
     img_h, img_w, img_c = img_in.shape
@@ -94,14 +86,22 @@ def median_filter(img_path, ksize=3):
         
     img_in = cv2.cvtColor(img_in, cv2.COLOR_BGR2RGB)
     
+    
+    if len(img_in.shape) == 2:
+        img_in = np.expand_dims(img_in, axis=-1)
+    
+    if len(img_in.shape) != 3:
+        raise ValueError('The number of dimension of input image shape MUST BE 3'
+                         'but we got %s' %str(img_in.shape))
+    
     result = _median_filter(img_in, ksize)
     
     return result
 
     
-if __name__ == '__main__':
-    res = median_filter('./image/lenna.png')
-    display_image(res)
+# if __name__ == '__main__':
+#     res = median_filter('./image/lenna.png')
+#     display_image(res)
 
 
 
