@@ -1,63 +1,122 @@
-import math
-import copy
-import pylab 
-import random
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Apr 25 23:42:41 2020
+
+@author: qizhao
+"""
+
 import numpy as np
-from PIL import Image
 
 
-class ImageNoise(object):
-    """Class GenerateImageNoise allows to generate image noise, there are 2 type noise: gaussian noise and salt&pepper noise 
-       Attributs:
-           src_im: an 2D array containing input sorce image which is no-noise image
-       Method:
-           gaussNoise: gaussian noise image
-           saltPepperNoise: 
+def _gaussian_noise(img_in, snr_db=3):
+    """Function gaussNoise allows to generate gaussain 
+    noise and add these into source image
+    
+
+    Parameters
+    ----------
+        img_in : ndarray of shape 
+            input image.
+        snr_db : TYPE, optional
+            rsb: SNR(db) signal-to-noise ration be expressed 
+            in decibels, that compares the level of a desired signal 
+            to the level of background noise. The default is 3.
+
+    Returns
+    -------
+        image noised that.
+
     """
-    def __init__(self, src_im):
-        self.src_im=np.array(src_im, dtype=float)
-        
-    def gaussNoise(self, snr_db=3):
-        """Function gaussNoise allows to generate gaussain noise and add these into source image
-           Parameters:
-               rsb: SNR(db) signal-to-noise ration be expressed  in decibels, that compares the level of a desired signal 
-               to the level of background noise.
-           Returns:
-               noise_im: image noised that is the image added gaussain noise
-        """
-        # calculate source image variance 
-        # SNR=var(image)/var(noise)
-        # SNR(db)=10*log(SNR) ==> SNR=10**(SNR(db)/10)
-        im_var=np.var(self.src_im)
-        noise_var=im_var/(10**(snr_db/10))
-        # get square root of noise
-        sigma=np.sqrt(noise_var)
-        im_rows, im_cols=np.shape(self.src_im)
-        # get the number of noise which is number of rows multiply the number of cols
-        num_noise=im_rows*im_cols
-        noise_im=copy.deepcopy(self.src_im)
-        for i in range(num_noise):
-            random_x=random.randint(0, im_rows-1)
-            random_y=random.randint(0, im_cols-1)
-            noise_im[random_x, random_y]=noise_im[random_x, random_y]+random.gauss(0, sigma)
-            if noise_im[random_x, random_y]<=0:
-                noise_im[random_x, random_y]=0
-            elif noise_im[random_x, random_y]>=255:
-                noise_im[random_x, random_y]=255
-        return noise_im
-        
-    def saltPepperNoise(self, prob):
-        cur_im=self.src_im
-        im_rows, im_cols=np.shape(self.src_im)
-        noise_im=np.zeros((im_rows, im_cols), dtype=float)
-        for i in range(im_rows):
-            for j in range(im_cols):
-                x=random.random()
-                if x<prob:
-                    noise_im[i,j]=0
-                elif x>(1-prob):
-                    noise_im[i,j]=255
-                else:
-                    noise_im[i,j]=cur_im[i,j]
-        return noise_im
-                    
+    
+    img_in = img_in.copy().astype(np.float32)
+    
+    img_h, img_w, img_c = img_in.shape
+    
+    img_out = np.zeros((img_h, img_w, img_c), dtype=np.float32)
+    
+    # calculate source image variance 
+    # SNR=var(image)/var(noise)
+    # SNR(db)=10*log(SNR) ==> SNR=10**(SNR(db)/10)
+    
+    img_var = np.var(img_in)
+    
+    noise_var = img_var / np.power(10, (snr_db / 10))
+    # noise_var=img_var / (10 ** (snr_db / 10))
+    
+    sigma = np.sqrt(noise_var)
+
+    gaussian_noise = np.random.normal(0, sigma, (img_h, img_w))
+    
+    
+    img_out[:, :, 0] = img_in[:, :, 0] + gaussian_noise
+    img_out[:, :, 1] = img_in[:, :, 1] + gaussian_noise
+    img_out[:, :, 2] = img_in[:, :, 2] + gaussian_noise
+
+
+    img_out = np.clip(img_out, 0, 255)
+    
+    img_out = img_out.astype(np.uint8) 
+    
+    return img_out
+
+
+
+def _salt_pepper_noise(img_in, prob):
+    """salt&pepper image noise
+
+    Parameters
+    ----------
+        img_in : ndarray of shape [height, width, channel]
+            input image.
+        prob : float
+            The percentage of noise, it should be between 0 and 1.
+
+    Returns
+    -------
+        noised image.
+
+    """
+    
+    img_in = img_in.copy().astype(np.float32)
+    
+    img_h, img_w, img_c = img_in.shape
+    
+    img_out = img_in.copy()
+    
+    amount = 0.004
+    
+    n_salts = np.ceil(img_in.size * amount * prob)
+    
+    coords = [np.random.randint(0, i - 1, int(n_salts))
+              for i in img_in.shape]
+    
+    img_out[coords] = 1
+
+
+    n_peppers = np.ceil(img_in.size * amount * (1 - prob))
+    
+    coords = [np.random.randint(0, i - 1, int(n_peppers))
+              for i in img_in.shape]
+    
+    img_out[coords] = 0
+    
+    img_out = img_out.astype(np.uint8) 
+    
+    return img_out
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
