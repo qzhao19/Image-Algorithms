@@ -114,7 +114,7 @@ def _gaussian_filter(img_in, ksize, sigma):
     
     img_out = np.clip(img_out, 0, 255)
     
-    img_out = img_out[pad : pad + img_h, pad : pad + img_w].astype(np.uint8)
+    img_out = img_out[pad : pad + img_h, pad : pad + img_w, :].astype(np.uint8)
     
     return img_out
     
@@ -161,6 +161,22 @@ def gaussian_filter(img_path, ksize = 3, sigma = 1.5):
         raise ValueError('Cannot read image from {}, check input path!'.format(img_path))
     
     img_in = cv2.cvtColor(img_in, cv2.COLOR_BGR2RGB)
+    
+    
+    if not isinstance(img_in, np.ndarray):
+        img_in = np.asarray(img_in)
+    
+    if img_in.dtype.type != np.float32:
+        img_in = img_in.astype(np.float32)
+    
+    
+    if len(img_in.shape) == 2:
+        img_in = np.expand_dims(img_in, axis=-1)
+    
+    if len(img_in.shape) != 3:
+        raise ValueError('The number of dimension of input image shape MUST BE 3'
+                         'but we got %s' %str(img_in.shape))
+    
     
     result = _gaussian_filter(img_in, ksize, sigma)
     
