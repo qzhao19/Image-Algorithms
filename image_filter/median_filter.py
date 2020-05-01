@@ -38,7 +38,7 @@ def _median_filter(img_in, ksize):
                        dtype=np.float32)
     
     
-    img_out[pad : pad + img_h, pad : pad + img_w, :] = img_in.copy().astype(np.float32)
+    img_out[pad : pad + img_h, pad : pad + img_w, :] = img_in.copy()
     
      # temp image 
     tmp = img_out.copy()
@@ -50,7 +50,7 @@ def _median_filter(img_in, ksize):
 
     img_out = np.clip(img_out, 0, 255)
     
-    img_out = img_out.astype(np.uint8) 
+    img_out = img_out[pad : pad + img_h, pad : pad + img_w, :].astype(np.float32) 
     
     return img_out
 
@@ -85,6 +85,14 @@ def median_filter(img_path, ksize=3):
         raise ValueError('Cannot read image from {}, check input path!'.format(img_path))
         
     img_in = cv2.cvtColor(img_in, cv2.COLOR_BGR2RGB)
+    
+    
+    if not isinstance(img_in, np.ndarray):
+        img_in = np.asarray(img_in)
+    
+    if img_in.dtype.type != np.float32:
+        img_in = img_in.astype(np.float32)
+    
     
     
     if len(img_in.shape) == 2:
