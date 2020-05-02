@@ -4,7 +4,7 @@ Created on Sat Apr 25 23:42:41 2020
 
 @author: qizhao
 """
-
+import numbers
 import numpy as np
 
 
@@ -28,7 +28,7 @@ def _gaussian_noise(img_in, snr_db=3):
 
     """
     
-    img_in = img_in.copy().astype(np.float32)
+    img_in = img_in.copy()
     
     img_h, img_w, img_c = img_in.shape
     
@@ -77,7 +77,7 @@ def _salt_pepper_noise(img_in, prob):
 
     """
     
-    img_in = img_in.copy().astype(np.float32)
+    img_in = img_in.copy()
     
     img_h, img_w, img_c = img_in.shape
     
@@ -105,11 +105,60 @@ def _salt_pepper_noise(img_in, prob):
     return img_out
 
 
+def _speckly(img_in):
+    """speckly noise
+    
+
+    Parameters
+    ----------
+        img_in : ndarray of shape [height, width, channel]
+                input image.
+
+    Returns
+    -------
+    
+
+    """
+    img_h, img_w, img_c = img_in.shape
+    
+    # a sdantard gaussian distribution
+    gaussian_noise = np.random.randn(img_h, img_w, img_c)
+    
+    img_out = img_in.copy() + img_in.copy() * gaussian_noise
+    
+    return img_out
 
 
+def image_noise(img_path, mode='gaussian', snr=3, prob=0.5):
+    """
+    
 
+    Parameters
+    ----------
+    img_path : TYPE
+        DESCRIPTION.
+    mode : TYPE, optional
+        DESCRIPTION. The default is 'gaussian'.
+    snr : TYPE, optional
+        DESCRIPTION. The default is 3.
+    prob : TYPE, optional
+        DESCRIPTION. The default is 0.5.
 
+    Returns
+    -------
+    None.
 
+    """
+    
+    
+    if not isinstance(snr, numbers.Number):
+        raise ValueError('{} is not an Integer')
+        
+    else:
+        if not isinstance(snr, int):
+            snr = int(snr)
+    
+    
 
 
 
