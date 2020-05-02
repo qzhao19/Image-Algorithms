@@ -84,23 +84,23 @@ def median_filter(img_path, ksize=3):
         img_in = cv2.imread(img_path)
     except:
         raise ValueError('Cannot read image from {}, check input path!'.format(img_path))
-        
-    img_in = cv2.cvtColor(img_in, cv2.COLOR_BGR2RGB)
     
+    
+    if len(img_in.shape) == 1:
+        img_in = cv2.cvtColor(img_in, cv2.COLOR_GRAY2RGB)
+    elif len(img_in.shape) == 3:
+        img_in = cv2.cvtColor(img_in, cv2.COLOR_BGR2RGB)
+    else:
+        raise ValueError('The dimensions of image must be one or three '
+                         'but got %s' %str(len(img_in.shape)))
+        
     
     if not isinstance(img_in, np.ndarray):
         img_in = np.asarray(img_in)
     
+    
     if img_in.dtype.type != np.float32:
         img_in = img_in.astype(np.float32)
-    
-    
-    if len(img_in.shape) == 2:
-        img_in = np.expand_dims(img_in, axis=-1)
-    
-    if len(img_in.shape) != 3:
-        raise ValueError('The number of dimension of input image shape MUST BE 3'
-                         'but we got %s' %str(img_in.shape))
     
     
     result = _mean_filter(img_in, ksize)
