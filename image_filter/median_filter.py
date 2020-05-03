@@ -9,7 +9,6 @@ Created on Sat Apr 25 23:42:41 2020
 import cv2
 import numbers
 import numpy as np
-from utils.utils import display_image
 
 
 def _median_filter(img_in, ksize):

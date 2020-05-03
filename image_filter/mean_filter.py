@@ -9,7 +9,6 @@ Created on Thu Apr 30 23:20:03 2020
 import cv2
 import numbers
 import numpy as np
-from utils.utils import display_image
 
 
 

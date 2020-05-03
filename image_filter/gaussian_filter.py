@@ -183,9 +183,9 @@ def gaussian_filter(img_path, ksize = 3, sigma = 1.5):
     return result   
     
     
-if __name__ == '__main__':
-    res = gaussian_filter('./image/lenna.png')
-    display_image(res)   
+# if __name__ == '__main__':
+#     res = gaussian_filter('./image/lenna.png')
+#     display_image(res)   
     
     
     
