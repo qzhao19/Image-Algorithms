@@ -11,6 +11,86 @@ import numbers
 import numpy as np
 
 
+
+class MedianFilter(object):
+    """Median filter class
+    
+    Parameters:
+    ----------
+        ksize : int
+            kernel size.
+    """
+    
+    def __init__(self, ksize):
+        self.ksize = ksize
+        
+    def _median_filter(self, img_in):
+        """
+        
+
+        Parameters
+        ----------
+        img : ndarray of shape [height, width, channel]
+            input image.
+
+        Returns
+        -------
+        None.
+
+        """
+        
+        ksize = self.ksize
+        img_h, img_w, img_c = img_in.shape
+    
+        # zero padding, get padding size
+        pad = ksize // 2
+        img_out = np.zeros((img_h + pad * 2, img_w + pad * 2, img_c), 
+                           dtype=np.float32)
+        
+        
+        img_out[pad : pad + img_h, pad : pad + img_w, :] = img_in.copy()
+        
+         # temp image 
+        tmp = img_out.copy()
+        
+        for y in range(img_h):
+            for x in range(img_w):
+                for z in range(img_c):
+                    img_out[y + pad, x + pad, z] = np.median(tmp[y : y + ksize, x : x + ksize, z])
+    
+        img_out = np.clip(img_out, 0, 255)
+        
+        img_out = img_out[pad : pad + img_h, pad : pad + img_w, :].astype(np.float32) 
+        
+        self.img_out = img_out
+
+    def fit(self, img_in):
+        """
+        
+
+        Parameters
+        ----------
+        img_in : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        None.
+
+        """
+
+
+
+
+
+
+
+
+
+
+
+
+
 def _median_filter(img_in, ksize):
     """mdedian filter
     
